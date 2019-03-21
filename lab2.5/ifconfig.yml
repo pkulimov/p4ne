@@ -1,0 +1,13 @@
+- hosts: fs-ga
+  tasks:
+    - name: Get ip config
+      command: ifconfig -a
+      register: ip
+
+    - name: Get RX packets
+      set_fact:
+        packets: "{{ ip['stdout'] | regex_findall('RX packets:([0-9]+)') }}"
+
+    - name: Show sum RX packets
+      debug:
+        msg: "Result = {{ packets | map('int') | sum }}"
